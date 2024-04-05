@@ -173,7 +173,7 @@ export async function getLinuxInfo() {
   //const [osName, osVersion] = stdout.trim().split('\n');
   //core.debug(`OS Name: ${osName}, Version: ${osVersion}`);
 
-  return {osName: osName, osVersion: osVersion};
+  return {osName: matches[1], osVersion: matches[0]};
 }
 
 export async function getOSInfo() {
