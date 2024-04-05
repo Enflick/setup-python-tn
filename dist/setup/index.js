@@ -91824,13 +91824,29 @@ function getMacOSInfo() {
 }
 function getLinuxInfo() {
     return __awaiter(this, void 0, void 0, function* () {
-        const pyprojectFile = fs_1.default.readFileSync('/etc/os-release').toString();
-        const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
-            'unknown',
-            'unknown'
-        ];
-        core.debug(matches.toString());
-        return { osName: matches[1], osVersion: matches[0] };
+        let osName, osVersion;
+        try {
+            const pyprojectFile = fs_1.default.readFileSync('/etc/os-release').toString();
+            const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
+                'unknown',
+                'unknown'
+            ];
+            osName = matches[1].match(/(?:ID=)(?:"?)(.+)(?:"?)/);
+            if (osName != undefined)
+                osName = osName[1];
+            osVersion = matches[0].match(/(?:ID=)(?:"?)(.+)(?:"?)/);
+            if (osVersion != undefined)
+                osVersion = osVersion[1];
+            core.debug(`osName: ${osName}`);
+            core.debug(`osVersion: ${osVersion}`);
+        }
+        catch (err) {
+            const error = err;
+            core.debug(error.message);
+        }
+        finally {
+            return { osName: osName, osVersion: osVersion };
+        }
     });
 }
 exports.getLinuxInfo = getLinuxInfo;
