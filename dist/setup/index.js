@@ -91824,12 +91824,13 @@ function getMacOSInfo() {
 }
 function getLinuxInfo() {
     return __awaiter(this, void 0, void 0, function* () {
-        const { stdout } = yield exec.getExecOutput('lsb_release', ['-i', '-r', '-s'], {
-            silent: true
-        });
-        const [osName, osVersion] = stdout.trim().split('\n');
-        core.debug(`OS Name: ${osName}, Version: ${osVersion}`);
-        return { osName: osName, osVersion: osVersion };
+        const pyprojectFile = fs_1.default.readFileSync('/etc/os-release').toString();
+        const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
+            'unknown',
+            'unknown'
+        ];
+        core.debug(matches.toString());
+        return { osName: matches[1], osVersion: matches[0] };
     });
 }
 exports.getLinuxInfo = getLinuxInfo;

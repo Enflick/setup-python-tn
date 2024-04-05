@@ -143,7 +143,7 @@ export function logWarning(message: string): void {
 }
 
 async function getWindowsInfo() {
-  const { stdout } = await exec.getExecOutput(
+  const {stdout} = await exec.getExecOutput(
     'powershell -command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"',
     undefined,
     {
@@ -153,24 +153,27 @@ async function getWindowsInfo() {
 
   const windowsVersion = stdout.trim().split(' ')[3];
 
-  return { osName: 'Windows', osVersion: windowsVersion };
+  return {osName: 'Windows', osVersion: windowsVersion};
 }
 
 async function getMacOSInfo() {
-  const { stdout } = await exec.getExecOutput('sw_vers', ['-productVersion'], {
+  const {stdout} = await exec.getExecOutput('sw_vers', ['-productVersion'], {
     silent: true
   });
 
   const macOSVersion = stdout.trim();
 
-  return { osName: 'macOS', osVersion: macOSVersion };
+  return {osName: 'macOS', osVersion: macOSVersion};
 }
 
 export async function getLinuxInfo() {
   const pyprojectFile = fs.readFileSync('/etc/os-release').toString();
-  const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || ['unknown', 'unknown'];
+  const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
+    'unknown',
+    'unknown'
+  ];
   core.debug(matches.toString());
-  return { osName: matches[1], osVersion: matches[0] };
+  return {osName: matches[1], osVersion: matches[0]};
 }
 
 export async function getOSInfo() {
