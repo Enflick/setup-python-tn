@@ -91831,10 +91831,10 @@ function getLinuxInfo() {
                 'unknown',
                 'unknown'
             ];
-            osName = matches[1].match(/(?:ID=)(?:"?)(.+)(?:"?)/);
+            osName = matches[1].match(/(?:ID="?)(\w+)"?/);
             if (osName != undefined)
                 osName = osName[1];
-            osVersion = matches[0].match(/(?:ID=)(?:"?)(.+)(?:"?)/);
+            osVersion = matches[0].match(/(?:ID="?)(\w+)"?/);
             if (osVersion != undefined)
                 osVersion = osVersion[1];
             core.debug(`osName: ${osName}`);
