@@ -90825,6 +90825,7 @@ function useCpythonVersion(version, architecture, updateEnvironment, checkLatest
         if (!installDir) {
             core.info(`Version ${semanticVersionSpec} was not found in the local cache`);
             const foundRelease = yield installer.findReleaseFromManifest(semanticVersionSpec, architecture, manifest);
+            core.debug(`semanticVersionSpec: ${semanticVersionSpec}\narchitecture: ${architecture}\nmanifest: ${manifest}`);
             if (foundRelease && foundRelease.files && foundRelease.files.length > 0) {
                 core.info(`Version ${semanticVersionSpec} is available for downloading`);
                 yield installer.installCpythonFromRelease(foundRelease);
@@ -91837,8 +91838,6 @@ function getLinuxInfo() {
             osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
             if (osVersion != undefined)
                 osVersion = osVersion[1];
-            core.debug(`osName: ${osName}`);
-            core.debug(`osVersion: ${osVersion}`);
         }
         catch (err) {
             const error = err;
