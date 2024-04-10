@@ -176,8 +176,11 @@ export async function getLinuxInfo() {
     ];
 
     osName = matches[1].match(/(?:ID="?)([\w.]+)"?/);
-    if (osName != undefined)
+    if (osName != undefined) {
       osName = osName[1][0].toUpperCase() + osName[1].substring(1);
+      if (osName == 'Debian')
+        osName = 'Ubuntu';
+    }
 
     osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
     if (osVersion != undefined) osVersion = osVersion[1];
