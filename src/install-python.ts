@@ -28,7 +28,7 @@ export async function findReleaseFromManifest(
     manifest,
     architecture
   );
-
+  core.debug(`foundRelease.release_url: ${foundRelease?.toString()}`);
   return foundRelease;
 }
 

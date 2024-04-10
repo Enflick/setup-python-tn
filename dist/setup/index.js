@@ -91408,6 +91408,7 @@ function findReleaseFromManifest(semanticVersionSpec, architecture, manifest) {
             manifest = yield getManifest();
         }
         const foundRelease = yield tc.findFromManifest(semanticVersionSpec, false, manifest, architecture);
+        core.debug(`foundRelease.release_url: ${foundRelease === null || foundRelease === void 0 ? void 0 : foundRelease.toString()}`);
         return foundRelease;
     });
 }
@@ -91833,11 +91834,8 @@ function getLinuxInfo() {
                 'unknown'
             ];
             osName = matches[1].match(/(?:ID="?)([\w.]+)"?/);
-            if (osName != undefined) {
+            if (osName != undefined)
                 osName = osName[1][0].toUpperCase() + osName[1].substring(1);
-                if (osName == 'Debian')
-                    osName = 'Ubuntu';
-            }
             osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
             if (osVersion != undefined)
                 osVersion = osVersion[1];
