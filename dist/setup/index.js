@@ -90825,6 +90825,7 @@ function useCpythonVersion(version, architecture, updateEnvironment, checkLatest
         if (!installDir) {
             core.info(`Version ${semanticVersionSpec} was not found in the local cache`);
             const foundRelease = yield installer.findReleaseFromManifest(semanticVersionSpec, architecture, manifest);
+            core.debug(`foundRelease: ${foundRelease}`);
             if (foundRelease && foundRelease.files && foundRelease.files.length > 0) {
                 core.info(`Version ${semanticVersionSpec} is available for downloading`);
                 yield installer.installCpythonFromRelease(foundRelease);
@@ -91407,6 +91408,7 @@ function findReleaseFromManifest(semanticVersionSpec, architecture, manifest) {
             manifest = yield getManifest();
         }
         const foundRelease = yield tc.findFromManifest(semanticVersionSpec, false, manifest, architecture);
+        core.debug(`foundRelease.release_url: ${foundRelease === null || foundRelease === void 0 ? void 0 : foundRelease.toString()}`);
         return foundRelease;
     });
 }
@@ -91824,12 +91826,28 @@ function getMacOSInfo() {
 }
 function getLinuxInfo() {
     return __awaiter(this, void 0, void 0, function* () {
-        const { stdout } = yield exec.getExecOutput('lsb_release', ['-i', '-r', '-s'], {
-            silent: true
-        });
-        const [osName, osVersion] = stdout.trim().split('\n');
-        core.debug(`OS Name: ${osName}, Version: ${osVersion}`);
-        return { osName: osName, osVersion: osVersion };
+        let osName, osVersion;
+        try {
+            const pyprojectFile = fs_1.default.readFileSync('/etc/os-release').toString();
+            const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
+                'unknown',
+                'unknown'
+            ];
+            osName = matches[1].match(/(?:ID="?)([\w.]+)"?/);
+            if (osName != undefined)
+                osName = osName[1][0].toUpperCase() + osName[1].substring(1);
+            osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
+            if (osVersion != undefined)
+                osVersion = osVersion[1];
+            core.debug(`osName: ${osName} osVersion: ${osVersion}`);
+        }
+        catch (err) {
+            const error = err;
+            core.debug(error.message);
+        }
+        finally {
+            return { osName: osName, osVersion: osVersion };
+        }
     });
 }
 exports.getLinuxInfo = getLinuxInfo;

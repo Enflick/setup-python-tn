@@ -167,15 +167,27 @@ async function getMacOSInfo() {
 }
 
 export async function getLinuxInfo() {
-  const {stdout} = await exec.getExecOutput('lsb_release', ['-i', '-r', '-s'], {
-    silent: true
-  });
+  let osName, osVersion;
+  try {
+    const pyprojectFile = fs.readFileSync('/etc/os-release').toString();
+    const matches = pyprojectFile.match(/ID="?(.+)"?/gm) || [
+      'unknown',
+      'unknown'
+    ];
 
-  const [osName, osVersion] = stdout.trim().split('\n');
+    osName = matches[1].match(/(?:ID="?)([\w.]+)"?/);
+    if (osName != undefined)
+      osName = osName[1][0].toUpperCase() + osName[1].substring(1);
 
-  core.debug(`OS Name: ${osName}, Version: ${osVersion}`);
-
-  return {osName: osName, osVersion: osVersion};
+    osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
+    if (osVersion != undefined) osVersion = osVersion[1];
+    core.debug(`osName: ${osName} osVersion: ${osVersion}`);
+  } catch (err) {
+    const error = err as Error;
+    core.debug(error.message);
+  } finally {
+    return {osName: osName, osVersion: osVersion};
+  }
 }
 
 export async function getOSInfo() {

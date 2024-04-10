@@ -79,6 +79,7 @@ export async function useCpythonVersion(
       architecture,
       manifest
     );
+    core.debug(`foundRelease: ${foundRelease}`);
 
     if (foundRelease && foundRelease.files && foundRelease.files.length > 0) {
       core.info(`Version ${semanticVersionSpec} is available for downloading`);
