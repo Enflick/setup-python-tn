@@ -181,6 +181,7 @@ export async function getLinuxInfo() {
 
     osVersion = matches[0].match(/(?:ID="?)([\w.]+)"?/);
     if (osVersion != undefined) osVersion = osVersion[1];
+    core.debug(`osName: ${osName} osVersion: ${osVersion}`);
   } catch (err) {
     const error = err as Error;
     core.debug(error.message);

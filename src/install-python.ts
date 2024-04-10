@@ -22,10 +22,6 @@ export async function findReleaseFromManifest(
     manifest = await getManifest();
   }
 
-  core.debug(
-    `semanticVersionSpec: ${semanticVersionSpec}\narchitecture: ${architecture}\nmanifest: ${manifest.toString()}`
-  );
-
   const foundRelease = await tc.findFromManifest(
     semanticVersionSpec,
     false,
